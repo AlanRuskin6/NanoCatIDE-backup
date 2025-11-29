@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>LiquidGlassApp</AssemblyName>
+    <RootNamespace>LiquidGlassApp</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
+    <PackageReference Include="FluentWPF" Version="0.10.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\*.gif" />
+    <Resource Include="Assets\*.png" />
+  </ItemGroup>
+
+</Project>

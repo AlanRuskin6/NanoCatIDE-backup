@@ -1,0 +1,816 @@
+<Window x:Class="LiquidGlassApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        Title="Liquid Glass"
+        Height="720" Width="1100"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResizeWithGrip"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        RenderOptions.BitmapScalingMode="HighQuality"
+        RenderOptions.ClearTypeHint="Auto">
+    
+    <Window.Resources>
+        <!-- 全局文本样式 - 改善字体清晰度 -->
+        <Style TargetType="TextBlock">
+            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+            <Setter Property="TextOptions.TextRenderingMode" Value="Grayscale"/>
+        </Style>
+        
+        <!-- 窗口关闭按钮样式 -->
+        <Style x:Key="WindowButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#20FF9EAA"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- 关闭按钮特殊样式 -->
+        <Style x:Key="CloseButtonStyle" TargetType="Button" BasedOn="{StaticResource WindowButtonStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FFFF8FAB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- 动态主题资源 -->
+        <SolidColorBrush x:Key="NavItemHoverBackground" Color="#18FF9EAA"/>
+        <SolidColorBrush x:Key="NavItemHoverBorder" Color="#30FF9EAA"/>
+        <Color x:Key="NavItemShadowColor">#FF9EAA</Color>
+        <LinearGradientBrush x:Key="NavItemCheckedBackground" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FFB4C2" Offset="0"/>
+            <GradientStop Color="#FF8FA3" Offset="0.5"/>
+            <GradientStop Color="#FF758F" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- 导航项样式 - 增强动画效果 -->
+        <Style x:Key="NavItemStyle" TargetType="RadioButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#8D6E63"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="12"
+                                Padding="{TemplateBinding Padding}"
+                                Margin="4,3"
+                                BorderThickness="1"
+                                BorderBrush="Transparent">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ContentPresenter x:Name="content"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource NavItemHoverBackground}"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource NavItemHoverBorder}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource NavItemCheckedBackground}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect BlurRadius="12" ShadowDepth="2" Opacity="0.25" Color="{DynamicResource NavItemShadowColor}"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    
+    <!-- 主容器 - Liquid Glass 毛玻璃效果 -->
+    <Border CornerRadius="24" 
+            BorderThickness="1.5"
+            BorderBrush="#40FFFFFF">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#F8FAFD" Offset="0"/>
+                <GradientStop Color="#F5F7FA" Offset="0.3"/>
+                <GradientStop Color="#FFF5F7" Offset="0.7"/>
+                <GradientStop Color="#FAFBFC" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="50" 
+                              ShadowDepth="12" 
+                              Opacity="0.18" 
+                              Color="#2D3748"
+                              Direction="270"/>
+        </Border.Effect>
+        
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- 左侧导航栏 - Liquid Glass 效果增强 -->
+            <Border x:Name="SidebarPanel"
+                    Grid.Column="0" 
+                    CornerRadius="24,0,0,24"
+                    Margin="0"
+                    BorderThickness="0,0,1,0"
+                    BorderBrush="#15000000">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#FCFCFD" Offset="0"/>
+                        <GradientStop Color="#F8F9FB" Offset="0.3"/>
+                        <GradientStop Color="#FFF8F9" Offset="0.6"/>
+                        <GradientStop Color="#F5F7FA" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Logo 区域 with GIF -->
+                    <StackPanel Grid.Row="0" Margin="20,24,20,20">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- GIF 装饰 -->
+                            <Image x:Name="DecorationGif" 
+                                   Grid.Column="0"
+                                   Width="48" Height="48"
+                                   Margin="0,0,12,0"
+                                   VerticalAlignment="Center"/>
+                            
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="Liquid Glass" 
+                                           FontSize="22" 
+                                           FontWeight="Bold"
+                                           Foreground="#1A202C">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect BlurRadius="0" ShadowDepth="0"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                                <TextBlock Text="Design System" 
+                                           FontSize="12" 
+                                           Foreground="#A0AEC0"
+                                           Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                    
+                    <!-- 导航菜单 -->
+                    <ScrollViewer Grid.Row="1" 
+                                  VerticalScrollBarVisibility="Hidden"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  Margin="12,0">
+                        <StackPanel>
+                            <TextBlock Text="主菜单" 
+                                       FontSize="11" 
+                                       Foreground="#A0AEC0" 
+                                       Margin="16,8,0,8"
+                                       FontWeight="SemiBold"/>
+                            
+                            <RadioButton Style="{DynamicResource NavItemStyle}" 
+                                         IsChecked="True" 
+                                         GroupName="Nav">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="🏠" FontSize="16" Margin="0,0,12,0"/>
+                                    <TextBlock Text="仪表盘" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            
+                            <RadioButton Style="{DynamicResource NavItemStyle}" GroupName="Nav">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="📊" FontSize="16" Margin="0,0,12,0"/>
+                                    <TextBlock Text="数据分析" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            
+                            <RadioButton Style="{DynamicResource NavItemStyle}" GroupName="Nav">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="📁" FontSize="16" Margin="0,0,12,0"/>
+                                    <TextBlock Text="项目管理" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            
+                            <RadioButton Style="{DynamicResource NavItemStyle}" GroupName="Nav">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="👥" FontSize="16" Margin="0,0,12,0"/>
+                                    <TextBlock Text="团队协作" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            
+                            <TextBlock Text="工具" 
+                                       FontSize="11" 
+                                       Foreground="#A0AEC0" 
+                                       Margin="16,24,0,8"
+                                       FontWeight="SemiBold"/>
+                            
+                            <RadioButton Style="{DynamicResource NavItemStyle}" GroupName="Nav">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="⚙️" FontSize="16" Margin="0,0,12,0"/>
+                                    <TextBlock Text="系统设置" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            
+                            <RadioButton Style="{DynamicResource NavItemStyle}" GroupName="Nav">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="🎨" FontSize="16" Margin="0,0,12,0"/>
+                                    <TextBlock Text="主题定制" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            
+                            <RadioButton Style="{DynamicResource NavItemStyle}" GroupName="Nav">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="❓" FontSize="16" Margin="0,0,12,0"/>
+                                    <TextBlock Text="帮助中心" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                        </StackPanel>
+                    </ScrollViewer>
+                    
+                    <!-- 用户信息区域 - 增强毛玻璃效果 -->
+                    <Border x:Name="UserInfoPanel"
+                            Grid.Row="2" 
+                            Margin="16,16,16,20"
+                            Padding="14"
+                            CornerRadius="16"
+                            BorderThickness="1"
+                            BorderBrush="#20FFFFFF"
+                            Background="{DynamicResource ThemeUserInfoBackground}">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="16" 
+                                              ShadowDepth="3" 
+                                              Opacity="0.08"
+                                              Color="{DynamicResource ThemeShadowColor}"/>
+                        </Border.Effect>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- 用户头像 - 主题渐变 -->
+                            <Border x:Name="UserAvatar" Width="42" Height="42" CornerRadius="21"
+                                    Background="{DynamicResource ThemeAccentGradient}">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.2" Color="{DynamicResource ThemeShadowColor}"/>
+                                </Border.Effect>
+                                <TextBlock Text="U" 
+                                           FontSize="18" 
+                                           FontWeight="Bold"
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            
+                            <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="用户名" 
+                                           FontSize="14" 
+                                           FontWeight="SemiBold"
+                                           Foreground="#2D3748"/>
+                                <TextBlock Text="专业版会员" 
+                                           FontSize="11" 
+                                           Foreground="#A0AEC0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+            
+            <!-- 右侧主内容区 -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <!-- 标题栏 -->
+                <Border Grid.Row="0" 
+                        Background="Transparent" 
+                        MouseLeftButtonDown="TitleBar_MouseLeftButtonDown"
+                        Padding="24,16">
+                    <!-- 统一工具栏容器 -->
+                    <Border x:Name="UnifiedToolbar"
+                            CornerRadius="12"
+                            BorderThickness="1"
+                            BorderBrush="{DynamicResource ThemeBorderBrush}"
+                            Background="{DynamicResource ThemeCardBackground}"
+                            Height="48">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="12" ShadowDepth="2" Opacity="0.06" Color="{DynamicResource ThemeShadowColor}"/>
+                        </Border.Effect>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- 搜索区域 -->
+                            <Grid Grid.Column="0" Margin="16,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="🔍" 
+                                           FontSize="14" 
+                                           Opacity="0.5"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,10,0"/>
+                                <TextBox Grid.Column="1" 
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         FontSize="14"
+                                         Foreground="#2D3748"
+                                         VerticalAlignment="Center"
+                                         Text="搜索..."
+                                         VerticalContentAlignment="Center"/>
+                            </Grid>
+
+                            <!-- 右侧功能区 -->
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,6,0">
+                                
+                                <!-- 分隔线 -->
+                                <Border Width="1" Height="24" Margin="4,0,4,0" Background="#15000000"/>
+
+                                <!-- 功能按钮组 -->
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource WindowButtonStyle}" Width="32" Height="32" ToolTip="通知">
+                                        <Grid>
+                                            <TextBlock Text="🔔" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Border Width="8" Height="8" CornerRadius="4" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-2,-2,0">
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                        <GradientStop Color="#FF6B6B" Offset="0"/>
+                                                        <GradientStop Color="#EE5A5A" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                            </Border>
+                                        </Grid>
+                                    </Button>
+                                    
+                                    <Button Style="{StaticResource WindowButtonStyle}" Width="32" Height="32" ToolTip="消息">
+                                        <TextBlock Text="💬" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Button>
+                                    
+                                    <Button Style="{StaticResource WindowButtonStyle}" Width="32" Height="32" ToolTip="日历">
+                                        <TextBlock Text="📅" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Button>
+                                    
+                                    <Button x:Name="ThemeButton" Style="{StaticResource WindowButtonStyle}" Width="32" Height="32" Click="ThemeButton_Click" ToolTip="切换主题">
+                                        <TextBlock x:Name="ThemeIcon" Text="🌸" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Button>
+
+                                    <!-- 主题名称显示 -->
+                                    <Border x:Name="ThemeNameBadge" CornerRadius="10" Padding="10,4" Margin="4,0,0,0" VerticalAlignment="Center" Visibility="Collapsed">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#FFD1DC" Offset="0"/>
+                                                <GradientStop Color="#FFB4C2" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <TextBlock x:Name="ThemeNameText" Text="樱花白" FontSize="11" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                                    </Border>
+                                </StackPanel>
+
+                                <!-- 分隔线 -->
+                                <Border Width="1" Height="24" Margin="8,0,8,0" Background="#15000000"/>
+
+                                <!-- 用户头像 -->
+                                <Border x:Name="TopUserAvatar" CornerRadius="16" Width="32" Height="32" Cursor="Hand" Background="{DynamicResource ThemeAccentGradient}" ToolTip="个人中心">
+                                    <TextBlock Text="👤" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+
+                                <!-- 分隔线 -->
+                                <Border Width="1" Height="24" Margin="8,0,8,0" Background="#15000000"/>
+
+                                <!-- 窗口控制按钮 -->
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource WindowButtonStyle}" Width="32" Height="32" Click="MinimizeButton_Click" ToolTip="最小化">
+                                        <Path Data="M4,0 L12,0" Stroke="#718096" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Button>
+                                    <Button Style="{StaticResource WindowButtonStyle}" Width="32" Height="32" Click="MaximizeButton_Click" ToolTip="最大化">
+                                        <Border Width="10" Height="10" BorderThickness="1.5" BorderBrush="#718096" CornerRadius="2" Background="Transparent"/>
+                                    </Button>
+                                    <Button Style="{StaticResource CloseButtonStyle}" Width="32" Height="32" Click="CloseButton_Click" ToolTip="关闭">
+                                        <Path Data="M0,0 L8,8 M8,0 L0,8" Stroke="#718096" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Border>
+                
+                <!-- 主内容区域 -->
+                <ScrollViewer Grid.Row="1" 
+                              VerticalScrollBarVisibility="Hidden"
+                              Padding="24,0,24,24">
+                    <StackPanel>
+                        <!-- 欢迎区域 -->
+                        <TextBlock Text="欢迎回来"
+                                   FontSize="28" 
+                                   FontWeight="SemiBold"
+                                   Foreground="#1A202C"
+                                   Margin="0,0,0,8"/>
+                        <TextBlock Text="这是您的 Liquid Glass 风格仪表盘" 
+                                   FontSize="14" 
+                                   Foreground="#718096"
+                                   Margin="0,0,0,24"/>
+                        
+                        <!-- 统计卡片区域 -->
+                        <UniformGrid Rows="1" Columns="4" Margin="0,0,0,24">
+                            <!-- 卡片 1 -->
+                            <Border Style="{StaticResource GlassCardStyle}" Margin="0,0,12,0">
+                                <StackPanel>
+                                    <Border Width="44" Height="44" 
+                                            CornerRadius="12" 
+                                            Background="#F5F5F7"
+                                            HorizontalAlignment="Left"
+                                            Margin="0,0,0,12">
+                                        <TextBlock Text="📈" 
+                                                   FontSize="20"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="总收入" 
+                                               FontSize="13" 
+                                               Foreground="#718096"/>
+                                    <TextBlock Text="¥128,430" 
+                                               FontSize="24" 
+                                               FontWeight="Bold"
+                                               Foreground="#1A202C"
+                                               Margin="0,4,0,0"/>
+                                    <TextBlock Text="↑ 12.5% 较上月" 
+                                               FontSize="11" 
+                                               Foreground="#48BB78"
+                                               Margin="0,8,0,0"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- 卡片 2 -->
+                            <Border Style="{StaticResource GlassCardStyle}" Margin="6,0,6,0">
+                                <StackPanel>
+                                    <Border Width="44" Height="44" 
+                                            CornerRadius="12" 
+                                            Background="#F5F5F7"
+                                            HorizontalAlignment="Left"
+                                            Margin="0,0,0,12">
+                                        <TextBlock Text="👥" 
+                                                   FontSize="20"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="活跃用户" 
+                                               FontSize="13" 
+                                               Foreground="#718096"/>
+                                    <TextBlock Text="2,847" 
+                                               FontSize="24" 
+                                               FontWeight="Bold"
+                                               Foreground="#1A202C"
+                                               Margin="0,4,0,0"/>
+                                    <TextBlock Text="↑ 8.2% 较上周" 
+                                               FontSize="11" 
+                                               Foreground="#48BB78"
+                                               Margin="0,8,0,0"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- 卡片 3 -->
+                            <Border Style="{StaticResource GlassCardStyle}" Margin="6,0,6,0">
+                                <StackPanel>
+                                    <Border Width="44" Height="44" 
+                                            CornerRadius="12" 
+                                            Background="#F5F5F7"
+                                            HorizontalAlignment="Left"
+                                            Margin="0,0,0,12">
+                                        <TextBlock Text="📦" 
+                                                   FontSize="20"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="订单数量" 
+                                               FontSize="13" 
+                                               Foreground="#718096"/>
+                                    <TextBlock Text="1,234" 
+                                               FontSize="24" 
+                                               FontWeight="Bold"
+                                               Foreground="#1A202C"
+                                               Margin="0,4,0,0"/>
+                                    <TextBlock Text="↓ 3.1% 较上周" 
+                                               FontSize="11" 
+                                               Foreground="#F56565"
+                                               Margin="0,8,0,0"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- 卡片 4 -->
+                            <Border Style="{StaticResource GlassCardStyle}" Margin="12,0,0,0">
+                                <StackPanel>
+                                    <Border Width="44" Height="44" 
+                                            CornerRadius="12" 
+                                            Background="#F5F5F7"
+                                            HorizontalAlignment="Left"
+                                            Margin="0,0,0,12">
+                                        <TextBlock Text="⭐" 
+                                                   FontSize="20"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="满意度" 
+                                               FontSize="13" 
+                                               Foreground="#718096"/>
+                                    <TextBlock Text="98.5%" 
+                                               FontSize="24" 
+                                               FontWeight="Bold"
+                                               Foreground="#1A202C"
+                                               Margin="0,4,0,0"/>
+                                    <TextBlock Text="↑ 2.3% 较上月" 
+                                               FontSize="11" 
+                                               Foreground="#48BB78"
+                                               Margin="0,8,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </UniformGrid>
+                        
+                        <!-- 主要内容区域 -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- 图表区域 -->
+                            <Border Grid.Column="0" 
+                                    Style="{StaticResource GlassCardStyle}"
+                                    Margin="0,0,12,0">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,16">
+                                        <TextBlock Text="数据趋势" 
+                                                   FontSize="16" 
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#1A202C"/>
+                                        <StackPanel Orientation="Horizontal" 
+                                                    HorizontalAlignment="Right">
+                                            <Button Content="周" 
+                                                    Style="{StaticResource SecondaryButtonStyle}"
+                                                    Padding="12,6"
+                                                    Margin="0,0,8,0"/>
+                                            <Button Content="月" 
+                                                    Style="{StaticResource GlassButtonStyle}"
+                                                    Padding="12,6"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    
+                                    <!-- 模拟图表 -->
+                                    <Border Background="#F7FAFC" 
+                                            CornerRadius="12" 
+                                            Height="200"
+                                            Padding="20">
+                                        <Canvas x:Name="ChartCanvas">
+                                            <!-- 图表将在代码中绘制 -->
+                                        </Canvas>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- 最近活动 -->
+                            <Border Grid.Column="1" 
+                                    Style="{StaticResource GlassCardStyle}">
+                                <StackPanel>
+                                    <TextBlock Text="最近活动" 
+                                               FontSize="16" 
+                                               FontWeight="SemiBold"
+                                               Foreground="#1A202C"
+                                               Margin="0,0,0,16"/>
+                                    
+                                    <!-- 活动列表 -->
+                                    <StackPanel>
+                                        <Border Padding="12" 
+                                                Background="#F7FAFC" 
+                                                CornerRadius="10"
+                                                Margin="0,0,0,8">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Width="36" Height="36" 
+                                                        CornerRadius="18" 
+                                                        Background="#F5F5F7"
+                                                        Margin="0,0,12,0">
+                                                    <TextBlock Text="📝" 
+                                                               FontSize="14"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"/>
+                                                </Border>
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="新建项目" 
+                                                               FontSize="13" 
+                                                               FontWeight="Medium"
+                                                               Foreground="#2D3748"/>
+                                                    <TextBlock Text="2 分钟前" 
+                                                               FontSize="11" 
+                                                               Foreground="#A0AEC0"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <Border Padding="12" 
+                                                Background="#F7FAFC" 
+                                                CornerRadius="10"
+                                                Margin="0,0,0,8">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Width="36" Height="36" 
+                                                        CornerRadius="18" 
+                                                        Background="#F5F5F7"
+                                                        Margin="0,0,12,0">
+                                                    <TextBlock Text="✅" 
+                                                               FontSize="14"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"/>
+                                                </Border>
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="完成任务" 
+                                                               FontSize="13" 
+                                                               FontWeight="Medium"
+                                                               Foreground="#2D3748"/>
+                                                    <TextBlock Text="15 分钟前" 
+                                                               FontSize="11" 
+                                                               Foreground="#A0AEC0"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <Border Padding="12" 
+                                                Background="#F7FAFC" 
+                                                CornerRadius="10"
+                                                Margin="0,0,0,8">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Width="36" Height="36" 
+                                                        CornerRadius="18" 
+                                                        Background="#F5F5F7"
+                                                        Margin="0,0,12,0">
+                                                    <TextBlock Text="💬" 
+                                                               FontSize="14"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"/>
+                                                </Border>
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="收到消息" 
+                                                               FontSize="13" 
+                                                               FontWeight="Medium"
+                                                               Foreground="#2D3748"/>
+                                                    <TextBlock Text="1 小时前" 
+                                                               FontSize="11" 
+                                                               Foreground="#A0AEC0"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                        
+                                        <Border Padding="12" 
+                                                Background="#F7FAFC" 
+                                                CornerRadius="10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Width="36" Height="36" 
+                                                        CornerRadius="18" 
+                                                        Background="#F5F5F7"
+                                                        Margin="0,0,12,0">
+                                                    <TextBlock Text="🎉" 
+                                                               FontSize="14"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"/>
+                                                </Border>
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="里程碑达成" 
+                                                               FontSize="13" 
+                                                               FontWeight="Medium"
+                                                               Foreground="#2D3748"/>
+                                                    <TextBlock Text="昨天" 
+                                                               FontSize="11" 
+                                                               Foreground="#A0AEC0"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                        
+                        <!-- 底部操作区 - 主题渐变 -->
+                        <Border x:Name="BottomActionPanel"
+                                Margin="0,24,0,0" 
+                                Padding="28"
+                                CornerRadius="20"
+                                BorderThickness="1"
+                                BorderBrush="#30FFFFFF"
+                                Background="{DynamicResource ThemeBottomActionBackground}">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="25" ShadowDepth="6" Opacity="0.3" Color="{DynamicResource ThemeShadowColor}"/>
+                            </Border.Effect>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Text="准备好开始了吗？" 
+                                               FontSize="20" 
+                                               FontWeight="Bold"
+                                               Foreground="White"/>
+                                    <TextBlock Text="探索更多 Liquid Glass 风格的精彩功能" 
+                                               FontSize="14" 
+                                               Foreground="#B8C5D0"
+                                               Margin="0,4,0,0"/>
+                                </StackPanel>
+                                
+                                <Button Grid.Column="1" 
+                                        Content="立即开始" 
+                                        Background="White"
+                                        Foreground="#3D4F5F"
+                                        FontWeight="SemiBold"
+                                        Padding="24,12"
+                                        Cursor="Hand">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="border" 
+                                                    Background="{TemplateBinding Background}"
+                                                    CornerRadius="12"
+                                                    Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter HorizontalAlignment="Center" 
+                                                                  VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="border" Property="Background" Value="#F7FAFC"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

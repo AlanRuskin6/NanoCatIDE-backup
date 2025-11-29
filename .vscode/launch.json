@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug LiquidGlassApp",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/LiquidGlassApp/bin/Debug/net8.0-windows/LiquidGlassApp.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/LiquidGlassApp",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        }
+    ]
+}

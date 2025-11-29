@@ -1,0 +1,221 @@
+<Application x:Class="LiquidGlassApp.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- 全局文字渲染优化 -->
+            <Style TargetType="Window">
+                <Setter Property="FontFamily" Value="YouYuan, Microsoft YaHei UI, Segoe UI, sans-serif"/>
+            </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="YouYuan, Microsoft YaHei UI, Segoe UI, sans-serif"/>
+                <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+                <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+                <Setter Property="TextOptions.TextHintingMode" Value="Fixed"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="UseLayoutRounding" Value="True"/>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="FontFamily" Value="YouYuan, Microsoft YaHei UI, Segoe UI, sans-serif"/>
+                <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+                <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="UseLayoutRounding" Value="True"/>
+            </Style>
+            <Style TargetType="Label">
+                <Setter Property="FontFamily" Value="YouYuan, Microsoft YaHei UI, Segoe UI, sans-serif"/>
+                <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+                <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+            </Style>
+            
+            <!-- Liquid Glass 风格资源 (可爱粉色版) -->
+            
+            <!-- 主色调 - 浅粉背景 -->
+            <Color x:Key="LightWhiteColor">#FFF5F7</Color>
+            <Color x:Key="GlassWhiteColor">#FFE4E1</Color>
+            <Color x:Key="AccentColor">#FF9EAA</Color>
+            <Color x:Key="AccentDarkColor">#FF758F</Color>
+            <Color x:Key="SoftShadowColor">#30FFB7C5</Color>
+            
+            <!-- 渐变画笔 -->
+            <LinearGradientBrush x:Key="GlassGradientBrush" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#FFF0F5" Offset="0"/>
+                <GradientStop Color="#FFE4E1" Offset="0.5"/>
+                <GradientStop Color="#FFD1DC" Offset="1"/>
+            </LinearGradientBrush>
+            
+            <LinearGradientBrush x:Key="AccentGradientBrush" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#FF9EAA" Offset="0"/>
+                <GradientStop Color="#FF758F" Offset="1"/>
+            </LinearGradientBrush>
+            
+            <LinearGradientBrush x:Key="CardGradientBrush" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#FFFFFF" Offset="0"/>
+                <GradientStop Color="#F8FAFC" Offset="1"/>
+            </LinearGradientBrush>
+            
+            <!-- 毛玻璃效果背景 -->
+            <LinearGradientBrush x:Key="FrostedGlassBrush" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#C0FFFFFF" Offset="0"/>
+                <GradientStop Color="#90F0F4F8" Offset="0.5"/>
+                <GradientStop Color="#B0FFFFFF" Offset="1"/>
+            </LinearGradientBrush>
+            
+            <!-- 按钮样式 - Liquid Glass 效果 -->
+            <Style x:Key="GlassButtonStyle" TargetType="Button">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Padding" Value="26,14"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border" 
+                                    CornerRadius="14"
+                                    Padding="{TemplateBinding Padding}"
+                                    BorderThickness="1"
+                                    BorderBrush="#30FFFFFF">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#FFB4C2" Offset="0"/>
+                                        <GradientStop Color="#FF9EAA" Offset="0.3"/>
+                                        <GradientStop Color="#FF8FA3" Offset="0.7"/>
+                                        <GradientStop Color="#FF758F" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="18" 
+                                                      ShadowDepth="4" 
+                                                      Opacity="0.25" 
+                                                      Color="#FF758F"/>
+                                </Border.Effect>
+                                <Border.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                </Border.RenderTransform>
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="RenderTransform">
+                                        <Setter.Value>
+                                            <ScaleTransform ScaleX="1.03" ScaleY="1.03"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter TargetName="border" Property="Effect">
+                                        <Setter.Value>
+                                            <DropShadowEffect BlurRadius="22" 
+                                                              ShadowDepth="6" 
+                                                              Opacity="0.35" 
+                                                              Color="#FF758F"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="RenderTransform">
+                                        <Setter.Value>
+                                            <ScaleTransform ScaleX="0.97" ScaleY="0.97"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <!-- 次要按钮样式 - 清新效果 -->
+            <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+                <Setter Property="Foreground" Value="#5A6C7D"/>
+                <Setter Property="BorderThickness" Value="1.5"/>
+                <Setter Property="BorderBrush" Value="#E8ECF0"/>
+                <Setter Property="Padding" Value="22,11"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border" 
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="12"
+                                    Padding="{TemplateBinding Padding}">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#FAFBFC" Offset="0"/>
+                                        <GradientStop Color="#F5F7FA" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#FFF5F7" Offset="0"/>
+                                                <GradientStop Color="#FFEEF1" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#FFD1DC"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <!-- 卡片样式 - Liquid Glass 效果 -->
+            <Style x:Key="GlassCardStyle" TargetType="Border">
+                <Setter Property="CornerRadius" Value="18"/>
+                <Setter Property="Padding" Value="22"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="#15FFFFFF"/>
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#FFFFFF" Offset="0"/>
+                            <GradientStop Color="#FEFEFF" Offset="0.3"/>
+                            <GradientStop Color="#FFF9FA" Offset="0.7"/>
+                            <GradientStop Color="#FAFBFC" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect BlurRadius="24" 
+                                          ShadowDepth="5" 
+                                          Opacity="0.1" 
+                                          Color="#FF9EAA"/>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect BlurRadius="30" 
+                                                  ShadowDepth="8" 
+                                                  Opacity="0.15" 
+                                                  Color="#FF9EAA"/>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <TranslateTransform Y="-2"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

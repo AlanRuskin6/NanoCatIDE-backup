@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "/4Ki1DFOu38=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\joyto\\Desktop\\design\\LiquidGlassApp\\LiquidGlassApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\joyto\\.nuget\\packages\\fluentwpf\\0.10.2\\fluentwpf.0.10.2.nupkg.sha512",
+    "C:\\Users\\joyto\\.nuget\\packages\\wpfanimatedgif\\2.0.2\\wpfanimatedgif.2.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}
