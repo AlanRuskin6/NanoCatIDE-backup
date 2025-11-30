@@ -1,0 +1,83 @@
+# Build results
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# Visual Studio
+.vs/
+*.user
+*.userosscache
+*.suo
+*.cache
+*.vspscc
+*.vssscc
+*.pidb
+*.svclog
+*.scc
+
+# VS Code
+.vscode/
+
+# JetBrains Rider
+.idea/
+
+# NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+
+# Build results
+[Bb]uild[Ll]og.*
+*.VisualState.xml
+TestResult.xml
+*.publishsettings
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Mac
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.env
+.venv
+env/
+venv/
+
+# Python Embed (保留目录结构，忽略大型二进制文件)
+# 注意：如果要完整发布，需要包含 PythonEmbed
+# PythonEmbed/python311/*.dll
+# PythonEmbed/python311/*.pyd
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+~$*
+
+# Publish output
+publish/
+
+# User-specific files
+*.rsuser
+*.sln.docstates
